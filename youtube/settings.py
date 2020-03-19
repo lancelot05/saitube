@@ -32,6 +32,9 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'search',
+    'favourites',
+    'recents',
+    'login',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -120,7 +123,10 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR,'search/static')
+    os.path.join(BASE_DIR,'search/static'),
+    os.path.join(BASE_DIR,'recents/static'),
+    os.path.join(BASE_DIR,'login/static'),
+    os.path.join(BASE_DIR,'favourites/static')
 ]
 
 YOUTUBE_DATA_API_KEY='AIzaSyCk7Rk_afJRlvM6UGdyfrcZFsL3wzQso24'

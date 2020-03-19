@@ -8,40 +8,42 @@ def index(request):
 	videos=[]
 	search_url='https://www.googleapis.com/youtube/v3/search'
 	video_url='https://www.googleapis.com/youtube/v3/videos'
-	search_params={
-	'part':'snippet',
-	'q':'see you again',
-	'key':settings.YOUTUBE_DATA_API_KEY,
-	'maxResults':9,
-	'type':'video'
-	}
-	r=requests.get(search_url,params=search_params)
-	results=r.json()['items']
-	video_ids=[]
-	for result in results:
-		video_ids.append(result['id']['videoId'])
+	if request.method == 'POST':
+		search_params={
+		'part':'snippet',
+		'q': request.POST['search'],
+		'key':settings.YOUTUBE_DATA_API_KEY,
+		'maxResults':9,
+		'type':'video'
+		}
+		r=requests.get(search_url,params=search_params)
+		results=r.json()['items']
+		video_ids=[]
+		for result in results:
+			video_ids.append(result['id']['videoId'])
 
-	video_params={
-	'key':settings.YOUTUBE_DATA_API_KEY,
-	'part':'snippet,contentDetails,statistics',
-	'id':','.join(video_ids),
-	'maxResults':9,
-	}
+		video_params={
+		'key':settings.YOUTUBE_DATA_API_KEY,
+		'part':'snippet,contentDetails,statistics',
+		'id':','.join(video_ids),
+		'maxResults':9,
+		}
 
-	r=requests.get(video_url,params=video_params)
-	results=r.json()['items']
-	for result in results:
-		video_data={
-			'title':title(result['snippet']['title']),
-			'id':result['id'],
-			'duration':duration(int(parse_duration(result['contentDetails']['duration']).total_seconds())),
-			'thumbnail':result['snippet']['thumbnails']['high']['url'],
-			'views':view(int(result['statistics']['viewCount'])),
-			'channel_name':result['snippet']['channelTitle'],
-			'pub_date':result['snippet']['publishedAt']
-			}
-		videos.append(video_data)
-		print(video_data['thumbnail'])
+		r=requests.get(video_url,params=video_params)
+		results=r.json()['items']
+		for result in results:
+			video_data={
+				'title':title(result['snippet']['title']),
+				'id':result['id'],
+				'duration':duration(int(parse_duration(result['contentDetails']['duration']).total_seconds())),
+				'thumbnail':result['snippet']['thumbnails']['high']['url'],
+				'views':view(int(result['statistics']['viewCount'])),
+				'channel_name':result['snippet']['channelTitle'],
+				'pub_date':result['snippet']['publishedAt'],
+				'url' : f'https://www.youtube.com/watch?v={result["id"]}'
+				}
+			videos.append(video_data)
+			print(video_data['thumbnail'])
 	context={
 	'videos':videos
 	}
@@ -92,6 +94,7 @@ def index(request):
 	}
 	print(context)
 	return render(request,'search/index.html',context)'''
+	
 def duration(s):
     h=str(int(s/3600))+":"
     s=s%3600
@@ -114,10 +117,10 @@ def duration(s):
 def title(str1):
     str2=""
     list1=[]
-    if len(str1)<50:
+    if len(str1)<40:
         return str1
     else:
-        for i in range(0,50):
+        for i in range(0,40):
             str2=str2+str1[i]
         str2=str2+"...."
         return str2

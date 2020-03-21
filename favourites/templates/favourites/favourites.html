@@ -29,13 +29,13 @@
   		<a href="/home/" class="logo col-sm-2 col">Youtube</a>&nbsp;&nbsp;&nbsp;
 
 
-      <div class="search">
+      <!-- <div class="search">
   		  <form class="navbar-form " method="POST">
             {% csrf_token %}
   		  		<input type="text" name="search" class="form-control" placeholder=" Search...">
 		      <button type="submit" class="btn btn-danger" >Search</button>
         </form>
-      </div>
+      </div> -->
 
 
   		<div id="Nav" class="collapse navbar-collapse">
@@ -58,7 +58,12 @@
   		</ul>
   		</div>
   	</nav>
-  	<br>
+	<br>
+	  
+
+	  {% for a in favs %}
+	  	<b>{{ a }}</b>
+	  {% endfor %}
 
 
 
